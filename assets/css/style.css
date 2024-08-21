@@ -1,0 +1,37 @@
+.wc-product-import-form {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.wc-product-import-form input[type="file"] {
+    display: block;
+    margin-bottom: 15px;
+}
+
+.wc-product-import-form input[type="submit"] {
+    background: #0073aa;
+    border-color: #006799;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+.wc-product-import-form input[type="submit"]:hover {
+    background: #006799;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    width: 90px;
+}
+
+.woocsvtable .woocsvtd-head {
+    width: 15%;
+    font-weight: 600;
+}
+
+.main-import-form .import-success-message {
+    padding: 10px 10px 10px 0px;
+}
