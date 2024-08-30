@@ -46,12 +46,12 @@ class WOOCSV_Product_Import_Export
         // phpcs:ignore
         $page = isset($_REQUEST['page']) ? sanitize_text_field($_REQUEST['page']) : "";
         if (in_array($page, $valid_pages)) {
-            wp_enqueue_style('wc-product-import-csv-styles', WOOCSVIMPORTEXPORT_PLUGIN_URL . "assets/css/style.css", array(), '1.0.0');
-            wp_enqueue_script('wc-product-export-csv-js', WOOCSVIMPORTEXPORT_PLUGIN_URL . "assets/js/product-export.js", array('jquery'), '1.0.0', true);
+            wp_enqueue_style('wc-product-import-csv-styles', WOOCSV_PLUGIN_URL . "assets/css/style.css", array(), '1.0.0');
+            wp_enqueue_script('wc-product-export-csv-js', WOOCSV_PLUGIN_URL . "assets/js/product-export.js", array('jquery'), '1.0.0', true);
 
             // Add DataTables.js and related styles
-            wp_enqueue_style('datatables-csv-css', WOOCSVIMPORTEXPORT_PLUGIN_URL . 'assets/css/dataTables.css', array(), '1.0.0');
-            wp_enqueue_script('datatables-csv-js', WOOCSVIMPORTEXPORT_PLUGIN_URL . 'assets/js/dataTables.js', array('jquery'), '1.0.0', true);
+            wp_enqueue_style('datatables-csv-css', WOOCSV_PLUGIN_URL . 'assets/css/dataTables.css', array(), '1.0.0');
+            wp_enqueue_script('datatables-csv-js', WOOCSV_PLUGIN_URL . 'assets/js/dataTables.js', array('jquery'), '1.0.0', true);
             wp_add_inline_script('wc-product-export-csv-js', $this->woocsv_get_inline_script());
         }
     }
@@ -97,17 +97,17 @@ class WOOCSV_Product_Import_Export
     public function woocsv_render_upload_page()
     {
 
-        include_once WOOCSVIMPORTEXPORT_PLUGIN_PATH . "pages/wc-product-import-form.php";
+        include_once WOOCSV_PLUGIN_PATH . "pages/wc-product-import-form.php";
 
     }
     public function woocsv_render_export_page()
     {
-        include_once WOOCSVIMPORTEXPORT_PLUGIN_PATH . "pages/wc-product-export-csv.php";
+        include_once WOOCSV_PLUGIN_PATH . "pages/wc-product-export-csv.php";
     }
 
     public function woocsv_handle_file_upload()
     {
-        if (!isset($_POST['import_products_nonce_field']) || !wp_verify_nonce($_POST['import_products_nonce_field'], 'import_products_nonce')) {
+        if (!isset($_POST['import_products_nonce_field']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['import_products_nonce_field'])), 'import_products_nonce')) {
             wp_die('Nonce verification failed');
         }
 
@@ -192,7 +192,7 @@ class WOOCSV_Product_Import_Export
     }
 
     if (!WP_Filesystem($credentials)) {
-    wp_die(__('Unable to access the filesystem.', wc-product-import-export-csv));
+    wp_die(__('Unable to access the filesystem.', product-import-and-export-csv-for-woocommerce));
     }
 
     global $wp_filesystem;
@@ -225,14 +225,14 @@ class WOOCSV_Product_Import_Export
     // Provide feedback to the user
     // Translators: %d is the number of successfully imported products.
     // %d is the number of errors that occurred.
-    $message = sprintf(__('Imported %d products. ', wc-product-import-export-csv), $success_count);
+    $message = sprintf(__('Imported %d products. ', product-import-and-export-csv-for-woocommerce), $success_count);
     if ($error_count > 0) {
-    $message .= sprintf(__('%d errors occurred.', wc-product-import-export-csv), $error_count);
+    $message .= sprintf(__('%d errors occurred.', product-import-and-export-csv-for-woocommerce), $error_count);
     }
 
     if (!empty($errors)) {
     // Translators: %s is a list of error messages separated by semicolons.
-    $message .= ' ' . __('Errors: %s', wc-product-import-export-csv) . implode('; ', $errors);
+    $message .= ' ' . __('Errors: %s', product-import-and-export-csv-for-woocommerce) . implode('; ', $errors);
     }
 
     // Redirect with nonce
@@ -246,10 +246,10 @@ class WOOCSV_Product_Import_Export
     exit;
 
     } else {
-    wp_die(__('Unable to read file', wc-product-import-export-csv));
+    wp_die(__('Unable to read file', product-import-and-export-csv-for-woocommerce));
     }
     } else {
-    wp_die(__('File does not exist', wc-product-import-export-csv));
+    wp_die(__('File does not exist', product-import-and-export-csv-for-woocommerce));
     }
     }
      */
@@ -445,7 +445,7 @@ class WOOCSV_Product_Import_Export
 
     public function woocsv_handle_export_selected_request()
     {
-        if (!isset($_POST['export_products_nonce_field']) || !wp_verify_nonce($_POST['export_products_nonce_field'], 'export_products_nonce')) {
+        if (!isset($_POST['export_products_nonce_field']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['export_products_nonce_field'])), 'export_products_nonce')) {
             wp_die('Nonce verification failed');
         }
 
