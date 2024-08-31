@@ -6,6 +6,19 @@ if (!defined('ABSPATH')) {
 class WOOCSV_Product_Import_Export
 {
 
+    /**
+     * Initializes the plugin by adding the necessary hooks to WordPress.
+     *
+     * This function is called when the class is instantiated, and it adds the
+     * following hooks to WordPress:
+     *
+     * - `admin_menu`: adds the menu page for the plugin.
+     * - `admin_post_import_products`: handles the file upload for the import
+     *   process.
+     * - `admin_post_export_selected_products_csv`: handles the export process
+     *   for selected products.
+     * - `admin_enqueue_scripts`: enqueues the necessary styles for the plugin.
+     */
     public function __construct()
     {
         add_action('admin_menu', array($this, 'woocsv_add_menu_page'));
@@ -13,11 +26,30 @@ class WOOCSV_Product_Import_Export
         add_action('admin_post_export_selected_products_csv', array($this, 'woocsv_handle_export_selected_request'));
         add_action('admin_enqueue_scripts', array($this, 'woocsv_enqueue_styles'));
     }
+    /**
+     * Returns an array of valid pages for the plugin.
+     *
+     * @since 1.0.0
+     *
+     * @return array
+     */
     public function woocsv_valid_pages()
     {
         $valid_pages = array("woocsv-product-import", "woocsv-product-export");
         return $valid_pages;
     }
+    /**
+     * Adds the menu page for the plugin.
+     *
+     * This function is called when the class is instantiated, and it adds the
+     * following menu page to WordPress:
+     *
+     * - `Product Import`: the main menu page for the plugin.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     public function woocsv_add_menu_page()
     {
         add_menu_page(
@@ -40,6 +72,22 @@ class WOOCSV_Product_Import_Export
         );
     }
 
+    /**
+     * Enqueues the necessary styles for the plugin.
+     *
+     * This function is called when the plugin is initialized, and it enqueues the
+     * following styles to WordPress:
+     *
+     * - `wc-product-import-csv-styles`: enqueues the main CSS file for the plugin.
+     * - `datatables-csv-css`: enqueues the CSS file for DataTables.js.
+     *
+     * Additionally, this function also enqueues the `wc-product-export-csv-js` script
+     * which is used to handle the export process for selected products.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     public function woocsv_enqueue_styles()
     {
         $valid_pages = $this->woocsv_valid_pages();
@@ -55,6 +103,24 @@ class WOOCSV_Product_Import_Export
             wp_add_inline_script('wc-product-export-csv-js', $this->woocsv_get_inline_script());
         }
     }
+    /**
+     * Returns an inline script that is used to handle the export process for
+     * selected products.
+     *
+     * This function is called when the plugin is initialized, and it returns an
+     * inline script that is used to handle the export process for selected
+     * products. The script does the following:
+     *
+     * - Initializes DataTables.js for the export table.
+     * - Shows a loading indicator when the form is submitted.
+     * - Hides the loading indicator when the page has finished loading.
+     * - Validates the CSV file format before upload. If the file is not a CSV
+     *   file, it prevents the form from submitting and alerts the user.
+     *
+     * @since 1.0.0
+     *
+     * @return string
+     */
     private function woocsv_get_inline_script()
     {
         return "
@@ -94,17 +160,57 @@ class WOOCSV_Product_Import_Export
         });
         ";
     }
+    /**
+     * Renders the page for uploading a CSV file to import products.
+     *
+     * This function is called when the plugin is initialized, and it renders the
+     * following page:
+     *
+     * - `Product Import`: the main menu page for the plugin.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     public function woocsv_render_upload_page()
     {
 
-        include_once WOOCSV_PLUGIN_PATH . "pages/wc-product-import-form.php";
+        include_once WOOCSV_PLUGIN_PATH . "pages/woocsv-product-import-form.php";
 
     }
+    /**
+     * Renders the page for exporting products as a CSV file.
+     *
+     * This function is called when the plugin is initialized, and it renders the
+     * following page:
+     *
+     * - `Product Export`: the page for exporting products as a CSV file.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     public function woocsv_render_export_page()
     {
-        include_once WOOCSV_PLUGIN_PATH . "pages/wc-product-export-csv.php";
+        include_once WOOCSV_PLUGIN_PATH . "pages/woocsv-product-export-csv.php";
     }
 
+    /**
+     * Handles the file upload and import of products from a CSV file.
+     *
+     * This function is called when the user submits the form on the product import page.
+     *
+     * It verifies the nonce, checks if the current user has the capability to manage options,
+     * checks if a file has been uploaded, and checks if the file is a CSV file. If any of
+     * these checks fail, it will die with a suitable error message.
+     *
+     * If all checks pass, it will call the `woocsv_import_products` method to import the
+     * products from the CSV file.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     public function woocsv_handle_file_upload()
     {
         if (!isset($_POST['import_products_nonce_field']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['import_products_nonce_field'])), 'import_products_nonce')) {
@@ -135,6 +241,17 @@ class WOOCSV_Product_Import_Export
         $this->woocsv_import_products($file_path);
     }
 
+    /**
+     * Imports products from a CSV file.
+     *
+     * This function reads a CSV file from a given path, and creates or updates products
+     * in WooCommerce based on the data in the CSV file. If any errors occur during the
+     * import process, it will provide feedback to the user and then exit.
+     *
+     * @param string $file_path The path to the CSV file to import.
+     *
+     * @return void
+     */
     private function woocsv_import_products($file_path)
     {
         if (($handle = fopen($file_path, 'r')) !== false) {
@@ -183,75 +300,22 @@ class WOOCSV_Product_Import_Export
         }
     }
 
-    /*
-    private function woocsv_import_products($file_path)
-    {
-    // Initialize WP_Filesystem
-    if (false === ($credentials = request_filesystem_credentials('', '', false, false, array()))) {
-    return; // Prompt for credentials
-    }
-
-    if (!WP_Filesystem($credentials)) {
-    wp_die(__('Unable to access the filesystem.', product-import-and-export-csv-for-woocommerce));
-    }
-
-    global $wp_filesystem;
-
-    if ($wp_filesystem->exists($file_path)) {
-    $file_content = $wp_filesystem->get_contents($file_path);
-
-    if ($file_content !== false) {
-    $lines = explode("\n", $file_content);
-    $header = str_getcsv(array_shift($lines));
-
-    $success_count = 0;
-    $error_count = 0;
-    $errors = array();
-
-    foreach ($lines as $line) {
-    if (!empty($line)) {
-    try {
-    $row = str_getcsv($line);
-    $product_data = array_combine($header, $row);
-    $this->woocsv_create_or_update_product($product_data);
-    $success_count++;
-    } catch (Exception $e) {
-    $error_count++;
-    $errors[] = $e->getMessage();
-    }
-    }
-    }
-
-    // Provide feedback to the user
-    // Translators: %d is the number of successfully imported products.
-    // %d is the number of errors that occurred.
-    $message = sprintf(__('Imported %d products. ', product-import-and-export-csv-for-woocommerce), $success_count);
-    if ($error_count > 0) {
-    $message .= sprintf(__('%d errors occurred.', product-import-and-export-csv-for-woocommerce), $error_count);
-    }
-
-    if (!empty($errors)) {
-    // Translators: %s is a list of error messages separated by semicolons.
-    $message .= ' ' . __('Errors: %s', product-import-and-export-csv-for-woocommerce) . implode('; ', $errors);
-    }
-
-    // Redirect with nonce
-    $nonce = wp_create_nonce('woocsv_import_action_message');
-    $redirect_url = add_query_arg(array(
-    'message' => urlencode($message),
-    'nonce_message' => $nonce,
-    ), admin_url('admin.php?page=woocsv-product-import'));
-
-    wp_redirect($redirect_url);
-    exit;
-
-    } else {
-    wp_die(__('Unable to read file', product-import-and-export-csv-for-woocommerce));
-    }
-    } else {
-    wp_die(__('File does not exist', product-import-and-export-csv-for-woocommerce));
-    }
-    }
+    /**
+     * Creates or updates a product from a given array of data.
+     *
+     * This function takes an array of data, validates the required fields, and then
+     * creates or updates a product using the WooCommerce product class.
+     *
+     * @param array $product_data An array of product data, with the following required
+     *                            keys: name, sku. The following keys are also
+     *                            supported: type, regular_price, sale_price,
+     *                            description, short_description, weight, length,
+     *                            width, height, downloadable, virtual, categories,
+     *                            tags, images, stock_status, stock_quantity,
+     *                            attributes, downloads.
+     *
+     * @throws Exception If the required fields are not present in the $product_data
+     *                   array.
      */
     private function woocsv_create_or_update_product($product_data)
     {
@@ -348,6 +412,18 @@ class WOOCSV_Product_Import_Export
         $product->save();
     }
 
+    /**
+     * Handles image upload from a given URL.
+     *
+     * This function will first check if the image is already in the media library.
+     * If it is, the attachment ID will be returned.
+     *
+     * If not, the image will be downloaded and uploaded to the media library.
+     *
+     * @param string $image_url URL of the image to upload.
+     *
+     * @return int|bool Attachment ID of the uploaded image, or false on failure.
+     */
     private function woocsv_handle_image_upload($image_url)
     {
         // Check if URL is valid and image exists
@@ -400,6 +476,13 @@ class WOOCSV_Product_Import_Export
         return $attachment_id;
     }
 
+    /**
+     * Given an array of term names and a taxonomy slug, returns an array of term IDs.
+     *
+     * @param array  $terms     An array of term names.
+     * @param string $taxonomy  The taxonomy slug.
+     * @return int[] An array of term IDs.
+     */
     private function woocsv_get_term_ids($terms, $taxonomy)
     {
         $term_ids = array();
@@ -417,6 +500,13 @@ class WOOCSV_Product_Import_Export
         return $term_ids;
     }
 
+    /**
+     * Given a URL, returns the attachment ID.
+     *
+     * @param string $url URL to an attachment.
+     *
+     * @return int Attachment ID.
+     */
     private function woocsv_get_attachment_id($url)
     {
         // Get the attachment ID from the URL
@@ -427,6 +517,14 @@ class WOOCSV_Product_Import_Export
 
     }
 
+    /**
+     * Format attributes for import.
+     *
+     * Given an array of attribute names and values, returns an array of WC_Product_Attribute objects.
+     *
+     * @param array $attributes An array of attribute names and values.
+     * @return WC_Product_Attribute[] An array of WC_Product_Attribute objects.
+     */
     private function woocsv_format_attributes($attributes)
     {
         $formatted_attributes = array();
@@ -443,6 +541,13 @@ class WOOCSV_Product_Import_Export
 
     //code for export product data as csv
 
+    /**
+     * Handle export selected products as CSV request.
+     *
+     * AJAX callback function that handles the export selected products as CSV request.
+     *
+     * @since 1.0.0
+     */
     public function woocsv_handle_export_selected_request()
     {
         if (!isset($_POST['export_products_nonce_field']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['export_products_nonce_field'])), 'export_products_nonce')) {
@@ -512,6 +617,13 @@ class WOOCSV_Product_Import_Export
         exit;
     }
 
+    /**
+     * Get an array of URLs of all images attached to a product (main image + gallery images).
+     *
+     * @param WC_Product $product Product instance.
+     *
+     * @return string[]
+     */
     private function woocsv_get_product_images($product)
     {
         $images = array();
@@ -524,7 +636,15 @@ class WOOCSV_Product_Import_Export
         }
         return $images;
     }
-    // format attributes
+
+    /**
+     * Format attributes for export.
+     *
+     * Given an array of WC_Product_Attribute objects, returns a string of formatted attribute names and values, separated by semicolons.
+     *
+     * @param WC_Product_Attribute[] $attributes An array of WC_Product_Attribute objects.
+     * @return string A string of formatted attribute names and values, separated by semicolons.
+     */
     private function woocsv_format_attributes_table($attributes)
     {
         $formatted_attributes = array();
