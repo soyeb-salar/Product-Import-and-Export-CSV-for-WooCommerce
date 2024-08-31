@@ -225,7 +225,7 @@ class WOOCSV_Product_Import_Export
             wp_die('No file uploaded');
         }
 
-        $file = $_FILES['product_file'];
+        $file = sanitize_file_name($_FILES['product_file']);
         $file_path = $file['tmp_name'];
 
         // Load the CSV file

@@ -7,8 +7,9 @@
  * Author URI: https://www.linkedin.com/in/soyebsalar/
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: woocsv-product-import-export-csv
+ * Text Domain: wcom-product-import-export-csv
  * Donate link: https: //soyebsalar.in/donate/
+ * Requires Plugins: woocommerce
  */
 
 if (!defined('ABSPATH')) {
@@ -54,7 +55,7 @@ function woocsv_woocommerce_not_installed_notice()
 {
     // Display an admin notice if WooCommerce is not installed
     echo '<div class="notice notice-error">
-             <p>' . esc_html__("WooCommerce is not installed or not activated. Please install and activate WooCommerce to use Product Import and Export CSV for WooCommerce plugin.", "woocsv-product-import-export-csv") . '</p>
+             <p>' . esc_html__("WooCommerce is not installed or not activated. Please install and activate WooCommerce to use Product Import and Export CSV for WooCommerce plugin.", "wcom-product-import-export-csv") . '</p>
           </div>';
 }
 
