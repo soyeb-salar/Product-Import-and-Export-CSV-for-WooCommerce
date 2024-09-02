@@ -221,23 +221,33 @@ class WOOCSV_Product_Import_Export
             wp_die('Unauthorized');
         }
 
-        if (!isset($_FILES['product_file'])) {
-            wp_die('No file uploaded');
+        if (!isset($_FILES['product_file']) || !isset($_FILES['product_file']['error']) || $_FILES['product_file']['error'] !== UPLOAD_ERR_OK) {
+            wp_die('No file uploaded or there was an upload error');
         }
 
-        $file = sanitize_file_name($_FILES['product_file']);
-        $file_path = $file['tmp_name'];
+        if (!isset($_FILES['product_file']['name']) || !isset($_FILES['product_file']['tmp_name'])) {
+            wp_die('Invalid file upload parameters');
+        }
+
+        // Sanitize file name
+        $file_name = sanitize_file_name($_FILES['product_file']['name']);
+        $file_tmp_path = sanitize_text_field($_FILES['product_file']['tmp_name']);
+
+        // Validate file type (only allow CSV)
+        $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+        if (strtolower($ext) !== 'csv') {
+            wp_die('Invalid file type. Only CSV files are allowed.');
+        }
 
         // Load the CSV file
         require_once ABSPATH . 'wp-admin/includes/file.php';
         WP_Filesystem();
         global $wp_filesystem;
 
-        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-        if ($ext != 'csv') {
-            wp_die('Invalid file type');
-        }
+        // Move the file to a temporary location if needed (optional, depends on how you handle files)
+        $file_path = $file_tmp_path;
 
+        // Call the import function with the sanitized file path
         $this->woocsv_import_products($file_path);
     }
 

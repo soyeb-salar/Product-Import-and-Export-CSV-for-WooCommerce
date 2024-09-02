@@ -6,7 +6,7 @@ $default_image_url = esc_url(WOOCSV_PLUGIN_URL . 'assets/images/default60.png');
 
 ?>
     <div class="wrap">
-        <h1><?php esc_html_e('Export Products', 'wcom-product-import-export-csv');?></h1>
+        <h1><?php esc_html_e('Export Products', 'product-import-and-export-csv-for-woocommerce');?></h1>
         <form id="export-products-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
             <input type="hidden" name="action" value="export_selected_products_csv">
             <?php wp_nonce_field('export_products_nonce', 'export_products_nonce_field');?>
@@ -17,19 +17,19 @@ $default_image_url = esc_url(WOOCSV_PLUGIN_URL . 'assets/images/default60.png');
                            <th scope="col" class="manage-column column-cb check-column">
                             <input type="checkbox" id="select_all_products">
                         </th>
-                        <th scope="col"><?php esc_html_e('Images', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('Name', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('Type', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('SKU', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('Regular Price', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('Sale Price', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('Short Description', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('Categories', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('Tags', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('Stock Status', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('Stock Quantity', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('Attributes', 'wcom-product-import-export-csv');?></th>
-                        <th scope="col"><?php esc_html_e('View Product', 'wcom-product-import-export-csv');?></th>
+                        <th scope="col"><?php esc_html_e('Images', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('Name', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('Type', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('SKU', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('Regular Price', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('Sale Price', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('Short Description', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('Categories', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('Tags', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('Stock Status', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('Stock Quantity', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('Attributes', 'product-import-and-export-csv-for-woocommerce');?></th>
+                        <th scope="col"><?php esc_html_e('View Product', 'product-import-and-export-csv-for-woocommerce');?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,7 +75,7 @@ $cover_image_id = $product->get_image_id();
                             <td><?php echo !empty($product->get_stock_status()) ? esc_html($product->get_stock_status()) : "-"; ?></td>
                             <td><?php echo !empty($product->get_stock_quantity()) ? esc_html($product->get_stock_quantity()) : "-"; ?></td>
                             <td><?php echo !empty($product->get_attributes()) ? esc_html($this->woocsv_format_attributes_table($product->get_attributes())) : "-"; ?></td>
-                            <td><a href="<?php echo esc_url(get_permalink($product->get_id())); ?>" target="_blank"><?php esc_html_e('View', 'wcom-product-import-export-csv');?></a></td>
+                            <td><a href="<?php echo esc_url(get_permalink($product->get_id())); ?>" target="_blank"><?php esc_html_e('View', 'product-import-and-export-csv-for-woocommerce');?></a></td>
                         </tr>
                         <?php
 }
@@ -84,7 +84,7 @@ $cover_image_id = $product->get_image_id();
             </table>
 
             <p class="submit">
-                <input type="submit" id="export-csv-button" value="<?php esc_attr_e('Export Selected Products as CSV', 'wcom-product-import-export-csv');?>" class="button button-primary">
+                <input type="submit" id="export-csv-button" value="<?php esc_attr_e('Export Selected Products as CSV', 'product-import-and-export-csv-for-woocommerce');?>" class="button button-primary">
             </p>
         </form>
     </div>
